@@ -1,0 +1,50 @@
+ARG minerva_base_image=openjdk:8-jre
+
+FROM maven:3.6.3-openjdk-8 AS builder
+
+COPY ./pom.xml ./pom.xml
+COPY ./minerva-core/pom.xml ./minerva-core/pom.xml
+COPY ./minerva-json/pom.xml ./minerva-json/pom.xml
+COPY ./minerva-converter/pom.xml ./minerva-converter/pom.xml
+COPY ./minerva-lookup/pom.xml ./minerva-lookup/pom.xml
+COPY ./minerva-server/pom.xml ./minerva-server/pom.xml
+COPY ./minerva-cli/pom.xml ./minerva-cli/pom.xml
+RUN mvn dependency:go-offline package -B -am -pl minerva-server -DskipTests -Dmaven.javadoc.skip=true -Dsource.skip=true
+
+COPY ./.git ./.git 
+RUN mvn dependency:go-offline package -B -am -pl minerva-cli -DskipTests -Dmaven.javadoc.skip=true -Dsource.skip=true
+
+COPY ./ ./
+RUN ./build-cli.sh 
+
+FROM ${minerva_base_image}
+
+ARG uid=1000
+ARG gid=1000
+WORKDIR /app
+
+ENV JAVA_OPTS="-Xmx2G"
+
+RUN echo '#!/bin/bash\n\
+set -x\n\
+java $JAVA_OPTS -cp /app/minerva-cli.jar org.geneontology.minerva.server.StartUpTool\
+ --use-golr-url-logging --use-request-logging --arachne -g http://skyhook.berkeleybop.org/go-lego-reacto.owl\
+ --set-important-relation-parent http://purl.obolibrary.org/obo/LEGOREL_0000000 --port 6800\
+ --golr-labels http://noctua-golr.berkeleybop.org --golr-seed http://golr-aux.geneontology.io/solr\
+ --ontojournal $1/blazegraph-go-lego-reacto-neo.jnl\
+ -f $1/blazegraph.jnl\
+ --export-folder $1/noctua-models/models\
+' > /app/run.sh
+
+RUN groupadd -g ${gid} gunicorn \
+    && useradd -u ${uid} -g ${gid} -c 'Gunicorn User' --no-create-home gunicorn \
+    && chown -R ${uid}:${gid} /app \
+    && chmod +x /app/run.sh \
+    && mkdir /var/minerva \
+    && chown ${uid}:${gid} /var/minerva
+
+COPY --chown=${uid}:${gid} --from=builder /minerva-cli/bin/minerva-cli.jar /app/minerva-cli.jar 
+
+EXPOSE 6800
+USER gunicorn
+CMD ["/app/run.sh", "/var/minerva"]

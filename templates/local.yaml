@@ -1,0 +1,9 @@
+####
+#### TODO
+####
+#### THIS DOES NOT CREATE A VIABLE USER PROFILE!!!
+####
+-
+  uri: {{ uri }}
+  username: {{ username }} 
+  password: {{ password }}

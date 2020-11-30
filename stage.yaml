@@ -1,0 +1,97 @@
+- hosts: localhost
+  vars_files:
+  - vars.yaml
+
+  tasks:
+  - name: Create stage directory
+    file:
+      path: '{{ stage_dir }}/{{ item }}'
+      state: directory
+    with_items:
+      - conf
+      - barista
+      - httpd-confs
+    tags:
+      - stage_dir
+      - httpd 
+
+  - name: Copy configs
+    copy:
+      src: 'confs/{{ item.file }}'
+      dest: '{{ stage_dir }}/{{ item.dir }}'
+    with_items:
+      - { file: 'local.yaml', dir: 'barista' }
+      - { file: 'startup.yaml', dir: 'conf' }
+      - { file: 'httpd.conf', dir: 'httpd-confs' }
+      - { file: 'httpd-vhosts.conf', dir: 'httpd-confs' }
+
+  - name: install configs from templates directory
+    template:
+      src: '{{ item.file }}'
+      dest: '{{ stage_dir }}/{{ item.dir }}'
+    with_items:
+      - { file: 'startup.yaml', dir: 'conf' }
+      - { file: 'local.yaml', dir: 'barista' }
+      - { file: 'docker-compose.yml', dir: '' }
+      - { file: 'httpd.conf', dir: 'httpd-confs' }
+      - { file: 'httpd-vhosts.conf', dir: 'httpd-confs' }
+    tags:
+      - stage_dir
+      - templating 
+
+  - name: Check if minerva-cli jar exists 
+    stat:
+      path: '{{ stage_dir }}/minerva-cli.jar'
+    register: jar_result 
+    tags:
+      - stage_dir
+  - name: Copy minerva-cli.jar
+    docker_container:
+      name: minerva_jar_copier
+      image: 'minerva:{{ tag }}'
+      command: 'cp /app/minerva-cli.jar /stage_dir'
+      auto_remove: true
+      detach: false
+      volumes:
+        - '{{ stage_dir }}:/stage_dir'
+    when: not jar_result.stat.exists
+    tags:
+      - stage_dir
+
+  - name: Check if journal exists 
+    stat:
+      path: '{{ stage_dir }}/blazegraph.jnl'
+    register: journal_result 
+    tags:
+      - stage_dir
+  - name: Create journal blazegraph.jnl
+    docker_container:
+      name: create_journal 
+      image: 'minerva:{{ tag }}'
+      command: 'java -jar minerva-cli.jar --import-owl-models -j /stage_dir/blazegraph.jnl -f /stage_dir/noctua-models/models'
+      auto_remove: true
+      detach: false
+      volumes:
+        - '{{ stage_dir }}:/stage_dir'
+    when: not journal_result.stat.exists
+    tags:
+      - stage_dir
+
+  - name: Check if repo is staged
+    stat:
+      path: '{{ stage_dir }}/{{ item }}'
+    register: staged_repos 
+    with_items:
+      - '{{ staged_repos }}'
+    tags:
+      - stage_dir
+  - name: Clone repos that are not staged
+    git:
+     repo: 'git@github.com:geneontology/{{ item.item }}.git'
+     dest: '{{ stage_dir }}/{{ item.item }}'
+     version: '{{ branch }}'
+    with_items:
+      - '{{ staged_repos.results }}'
+    when: not item.stat.exists
+    tags:
+      - stage_dir

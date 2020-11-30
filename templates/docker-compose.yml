@@ -1,0 +1,50 @@
+version: '3'
+services:
+
+  apache:
+    hostname: apache 
+    container_name: apache 
+    image: httpd:latest
+    restart: unless-stopped
+    volumes:
+      - {{ stage_dir }}/httpd-confs/httpd.conf:/usr/local/apache2/conf/httpd.conf
+      - {{ stage_dir }}/httpd-confs/httpd-vhosts.conf:/usr/local/apache2/conf/extra/httpd-vhosts.conf
+    ports:
+      - "8080:80"
+      - "8090:90"
+
+  minerva:
+    hostname: minerva 
+    container_name: minerva 
+    environment:
+      JAVA_OPTS: {{ minerva_java_opts }}
+    volumes:
+      - {{ stage_dir }}:/var/minerva
+    image: minerva:latest
+    restart: unless-stopped
+
+  barista:
+    hostname: barista 
+    container_name: barista  
+    volumes:
+      - {{ stage_dir }}:/stage_dir
+      - {{ stage_dir }}/conf/startup.yaml:/app/startup.yaml
+    image: noctua:latest
+    command: ./node_modules/.bin/gulp run-barista
+    restart: unless-stopped
+    depends_on:
+      - minerva 
+
+  noctua:
+    hostname: noctua 
+    container_name: noctua  
+    volumes:
+      - {{ stage_dir }}:/stage_dir
+      - {{ stage_dir }}/conf/startup.yaml:/app/startup.yaml
+    image: noctua:latest
+    command: ./node_modules/.bin/gulp run-noctua
+    restart: unless-stopped
+    depends_on:
+      - apache
+      - minerva 
+      - barista 
