@@ -5,12 +5,9 @@ branch: master
 tag: latest 
 cwd: "{{ lookup('env', 'PWD') }}"
 
-###############
-
-##############
 stage_dir: "{{ lookup('env', 'PWD') }}/stage_dir"
-uri: 'http://orcid.org/0000-0001-8244-1536'
-username: seth 
-password: carbon
+uri: 'http://orcid.org/replace-me'
+username: replace_me 
+password: replace_me 
 minerva_java_opts: "-Xmx4G"
-barista_lookup_host: 192.168.1.208  
+barista_lookup_host: replace_me 
