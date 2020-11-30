@@ -5,14 +5,12 @@
   tasks:
   - name: Checkout repos
     git:
-     repo: 'git@github.com:geneontology/{{ item }}.git'
+     repo: 'https://github.com/geneontology/{{ item }}.git'
      dest: ./{{ item }}
      version: '{{ branch }}'
      force: yes
     with_items:
       - '{{ repos }}'
-    tags:
-      - clone_repos
 
   - name: build minerva container image
     docker_image:
@@ -23,9 +21,6 @@
         path: '{{ cwd }}/minerva'
         pull: no
       state: present
-    tags:
-      - build_docker_images
-      - build_minerva_image
 
   - name: build noctua container image
     docker_image:
@@ -36,6 +31,3 @@
         path: '{{ cwd }}/noctua'
         pull: no
       state: present
-    tags:
-      - build_docker_images
-      - build_noctua_image
