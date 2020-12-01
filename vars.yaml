@@ -34,9 +34,8 @@ barista_lookup_host: REPLACE_ME
 barista_proxy_port: 8090
 
 ###
-# Noctua
-# http://localhost:
-# http://localhost:{{ barista_proxy_port }}
+# Noctua Access Port from Browser
+# http://localhost:{{ noctua_proxy_port }}
 # The port should be available on host machine
 #####
 noctua_proxy_port: 8080
