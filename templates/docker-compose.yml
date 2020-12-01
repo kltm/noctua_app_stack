@@ -1,18 +1,6 @@
 version: '3'
 services:
 
-  apache:
-    hostname: apache 
-    container_name: apache 
-    image: httpd:latest
-    restart: unless-stopped
-    volumes:
-      - {{ stage_dir }}/httpd-confs/httpd.conf:/usr/local/apache2/conf/httpd.conf
-      - {{ stage_dir }}/httpd-confs/httpd-vhosts.conf:/usr/local/apache2/conf/extra/httpd-vhosts.conf
-    ports:
-      - "{{noctua_proxy_port }}:80"
-      - "{{barista_proxy_port }}:90"
-
   minerva:
     hostname: minerva 
     container_name: minerva 
@@ -45,6 +33,32 @@ services:
     command: ./node_modules/.bin/gulp run-noctua
     restart: unless-stopped
     depends_on:
-      - apache
       - minerva 
       - barista 
+
+  apache_barista:
+    hostname: apache_barista 
+    container_name: apache_barista
+    image: httpd:latest
+    restart: unless-stopped
+    volumes:
+      - {{ stage_dir }}/httpd-confs/httpd.conf:/usr/local/apache2/conf/httpd.conf
+      - {{ stage_dir }}/httpd-confs/httpd-vhosts-barista.conf:/usr/local/apache2/conf/extra/httpd-vhosts.conf
+    ports:
+      - "{{barista_proxy_port }}:80"
+    depends_on:
+      - barista 
+
+  apache_noctua:
+    hostname: apache_noctua
+    container_name: apache_noctua
+    image: httpd:latest
+    restart: unless-stopped
+    volumes:
+      - {{ stage_dir }}/httpd-confs/httpd.conf:/usr/local/apache2/conf/httpd.conf
+      - {{ stage_dir }}/httpd-confs/httpd-vhosts-noctua.conf:/usr/local/apache2/conf/extra/httpd-vhosts.conf
+    ports:
+      - "{{noctua_proxy_port }}:80"
+    depends_on:
+      - noctua 
+
