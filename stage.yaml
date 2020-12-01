@@ -24,7 +24,6 @@
       - { file: 'httpd-vhosts-barista.conf', dir: 'httpd-confs' }
       - { file: 'httpd-vhosts-noctua.conf', dir: 'httpd-confs' }
 
-
   - name: Check if repo is staged
     stat:
       path: '{{ stage_dir }}/{{ item }}'
