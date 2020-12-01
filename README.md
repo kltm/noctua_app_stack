@@ -1,6 +1,6 @@
 # Noctua App Stack
 
-## Install app stack using ansible on a single machine
+Install app stack using ansible on a single machine
 
 ### Requirements 
 
@@ -13,6 +13,7 @@
     Note: Docker was given 3 CPUs and 8G RAM. (on mac see Docker Preferences | Resources)
 
 #### Installing ansible and docker dependencies
+
 The ansible docker plugin is needed to buid images ...
 
 ```sh
@@ -21,6 +22,13 @@ pip install docker
 ```
 
 #### Deploying app stack: 
+
+Clone this repo.
+
+```sh
+git clone https://github.com/abessiari/noctua_app_stack.git
+cd noctua_app_stack
+```
 
 Modify vars.yaml as needed. Minimally you need to modify the following variables:
   - uri
@@ -46,8 +54,16 @@ Staging artifacts needed by stack.
 ansible-playbook stage.yaml
 ```
 
-Bring stack up using docker compose.
+Bring up stack using docker compose.
 
 ```sh
+# assuming stage_dir is in current directory
 docker-compose -f stage_dir/docker-compose.yaml up -d
+```
+
+Bring down stack using docker compose.
+
+```sh
+# assuming stage_dir is in current directory
+docker-compose -f stage_dir/docker-compose.yaml down
 ```
