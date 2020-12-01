@@ -31,14 +31,14 @@ git clone https://github.com/abessiari/noctua_app_stack.git
 cd noctua_app_stack
 ```
 
-#### Modify vars.yaml as needed. Minimally you need to modify the following variables:
+#### Modify `vars.yaml` as needed. Minimally you need to modify the following variables:
   - uri
   - username
   - password
   - barista_lookup_host
     - On mac if using wireless, you can use `ipconfig getifaddr en0`
 
-#### Build noctua and minerva docker images
+#### Build noctua and minerva docker images.
 
 ```sh
 ansible-playbook build_images.yaml
@@ -46,7 +46,7 @@ docker image list | grep minerva
 docker image list | grep noctua 
 ```
 
-#### Stage artifacts needed by stack.
+#### Stage artifacts.
   - Create and stage blazegraph journal.
   - Stage repos
     - noctua-form, noctua-landing-page, noctua-models, go-site
