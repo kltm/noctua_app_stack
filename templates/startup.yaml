@@ -21,7 +21,7 @@ GOLR_LOCATION:
 BARISTA_LOOKUP_URL:
   comment: Define where Noctua looks for Barista.
   type: url
-  value: http://{{ barista_lookup_host }}:8090
+  value: http://{{ barista_lookup_host }}:{{ barista_proxy_port }}
 BARISTA_LOCATION:
   comment: Location that Barista should think it is. (may be different than that in BARISTA_LOOKUP_URL)
   type: number

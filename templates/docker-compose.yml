@@ -10,14 +10,14 @@ services:
       - {{ stage_dir }}/httpd-confs/httpd.conf:/usr/local/apache2/conf/httpd.conf
       - {{ stage_dir }}/httpd-confs/httpd-vhosts.conf:/usr/local/apache2/conf/extra/httpd-vhosts.conf
     ports:
-      - "8080:80"
-      - "8090:90"
+      - "{{noctua_proxy_port }}:80"
+      - "{{barista_proxy_port }}:90"
 
   minerva:
     hostname: minerva 
     container_name: minerva 
     environment:
-      JAVA_OPTS: {{ minerva_java_opts }}
+      JAVA_OPTS: "{{ minerva_java_opts }}"
     volumes:
       - {{ stage_dir }}:/var/minerva
     image: minerva:{{ tag }}

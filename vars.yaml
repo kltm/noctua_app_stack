@@ -1,13 +1,41 @@
 ---
+###############
+# Point stage_dir to a different locatiom. By default it will reside in the current directory.
+##############
+stage_dir: "{{ lookup('env', 'PWD') }}/stage_dir"
+
+###############
+# repos are cloned and used to build docker images.
+# staged_repos are cloned and deployed under stage_dir
+##############
 repos: [minerva, noctua]
 staged_repos: [noctua-form, noctua-landing-page, noctua-models, go-site]
 branch: master
 tag: latest 
-cwd: "{{ lookup('env', 'PWD') }}"
 
-stage_dir: "{{ lookup('env', 'PWD') }}/stage_dir"
-uri: 'http://orcid.org/replace-me'
-username: replace_me 
-password: replace_me 
+################
+# minerva JAVA_OPTS 
+##############
 minerva_java_opts: "-Xmx4G"
-barista_lookup_host: replace_me 
+
+###############
+# Barista Local authentication.
+##############
+uri: 'http://orcid.org/XXXX-XXXX-XXXX-XXXX'
+username: REPLACE_ME 
+password: REPLACE_ME 
+
+###
+# Barista Lookup URL
+# http://{{ barista_lookup_host }}:{{ barista_proxy_port }}
+# The port should be available on host machine
+#####
+barista_lookup_host: REPLACE_ME
+barista_proxy_port: 8090
+
+###
+# Noctua
+# http://localhost:
+# http://localhost:{{ barista_proxy_port }}
+# The port should be available on host machine
+noctua_proxy_port: 8080

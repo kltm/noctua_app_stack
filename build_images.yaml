@@ -17,8 +17,8 @@
       name: 'minerva:{{ tag }}'
       source: build
       build:
-        dockerfile: '{{ cwd }}/docker/Dockerfile.minerva'
-        path: '{{ cwd }}/minerva'
+        dockerfile: '{{ lookup('env', 'PWD') }}/docker/Dockerfile.minerva'
+        path: '{{ lookup('env', 'PWD') }}/minerva'
         pull: no
       state: present
 
@@ -27,7 +27,7 @@
       name: 'noctua:{{ tag }}'
       source: build
       build:
-        dockerfile: '{{ cwd }}/docker/Dockerfile.noctua'
-        path: '{{ cwd }}/noctua'
+        dockerfile: '{{ lookup('env', 'PWD') }}/docker/Dockerfile.noctua'
+        path: '{{ lookup('env', 'PWD') }}/noctua'
         pull: no
       state: present

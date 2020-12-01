@@ -48,7 +48,7 @@
       name: create_journal 
       image: 'minerva:{{ tag }}'
       command: 'java -jar minerva-cli.jar --import-owl-models -j /stage_dir/blazegraph.jnl -f /stage_dir/noctua-models/models'
-      auto_remove: false 
+      auto_remove: true 
       detach: false
       volumes:
         - '{{ stage_dir }}:/stage_dir'
