@@ -19,7 +19,7 @@ tag: latest
 minerva_java_opts: "-Xmx4G"
 
 ###############
-# Barista Local authentication.
+# Barista Local Authentication.
 ##############
 uri: 'http://orcid.org/XXXX-XXXX-XXXX-XXXX'
 username: REPLACE_ME 
@@ -38,4 +38,5 @@ barista_proxy_port: 8090
 # http://localhost:
 # http://localhost:{{ barista_proxy_port }}
 # The port should be available on host machine
+#####
 noctua_proxy_port: 8080
