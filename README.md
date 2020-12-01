@@ -22,6 +22,13 @@ pip install docker
 
 #### Deploying app stack: 
 
+Modify vars.yaml as needed. Minimally you need to modify the following variables:
+  - uri
+  - username
+  - password
+  - barista_lookup_host
+    - On mac if using wireless, you can use `ipconfig getifaddr en0`
+
 Clone noctua/minerva git repositorie and build noctua and minerva docker images
 
 ```sh
