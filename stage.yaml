@@ -19,7 +19,7 @@
     with_items:
       - { file: 'startup.yaml', dir: 'conf' }
       - { file: 'local.yaml', dir: 'barista' }
-      - { file: 'docker-compose.yml', dir: '' }
+      - { file: 'docker-compose.yaml', dir: '' }
       - { file: 'httpd.conf', dir: 'httpd-confs' }
       - { file: 'httpd-vhosts-barista.conf', dir: 'httpd-confs' }
       - { file: 'httpd-vhosts-noctua.conf', dir: 'httpd-confs' }
