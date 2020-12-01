@@ -45,21 +45,18 @@ ansible-playbook build_images.yaml
 docker image list | grep minerva
 docker image list | grep noctua 
 ```
-
 #### Stage artifacts needed by stack.
   - Build and stage the journal.
   - Stage repos
     - noctua-form, noctua-landing-page, noctua-models, go-site
-Speed up the process by:
-  - Creating stage_dir if it does not exist
-  - Copy `blazegraph.jnl` to stage_dir
-  - Copy `blazegraph-go-lego-reacto-neo.jnl` to stage_dir
-
+  - Note: Stage the journals below to speed up minerva start up time.
+    - Create stage_dir if it does not exist
+    - Copy`blazegraph.jnl` to stage_dir
+    - Copy`blazegraph-go-lego-reacto-neo.jnl` to stage_dir
 
 ```sh
 ansible-playbook stage.yaml
 ```
-
 #### Bring up stack using docker compose.
 
 ```sh
@@ -67,20 +64,15 @@ ansible-playbook stage.yaml
 docker-compose -f stage_dir/docker-compose.yaml up -d
 
 # minerva takes a long time to start up the first time
-# use this command to view the logs and wait it says it is listening on accep socket
+# Tail minerva logs to see its progress
 docker-compose -f stage_dir/docker-compose.yaml logs -f minerva
 
-#Make sure all services and up
+# When minerva is ready all other services should be up
 docker-compose -f stage_dir/docker-compose.yaml ps
 ```
 
 Access noctua from a browser using `http://localhost:{{ noctua_proxy_port }}`
 - if you did not change noctua_proxy_port, the url is `http://localhost:8080`
-
-```sh
-# assuming stage_dir is in current directory
-docker-compose -f stage_dir/docker-compose.yaml up -d
-```
 
 #### Bring down stack using docker compose.
 
