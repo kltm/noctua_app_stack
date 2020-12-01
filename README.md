@@ -12,7 +12,7 @@
     
     Note: Docker was given 3 CPUs and 8G RAM. (on mac see Docker Preferences | Resources)
 
-#### Installing ansible and docker dependencies
+#### Installing ansible and docker ansible plugin
 The ansible docker plugin is needed to buid images ...
 
 ```sh

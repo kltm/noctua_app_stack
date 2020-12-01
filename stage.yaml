@@ -23,7 +23,6 @@
       - { file: 'httpd.conf', dir: 'httpd-confs' }
       - { file: 'httpd-vhosts.conf', dir: 'httpd-confs' }
 
-
   - name: Check if repo is staged
     stat:
       path: '{{ stage_dir }}/{{ item }}'
