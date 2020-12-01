@@ -14,15 +14,15 @@ Install app stack using ansible on a single machine
     - Docker was given 3 CPUs and 8G RAM. (on mac see Docker Preferences | Resources)
     - python 2.7 should work as well.
 
-## Installing ansible and docker dependencies
+## Installing ansible and ansible docker plugin 
 
-The ansible docker plugin is needed to buid images ...
+The ansible docker plugin is used to buid docker images.
 
 ```sh
 pip install ansible
 pip install docker 
 ```
-### Deploying app stack: 
+## Deploying app stack: 
 
 #### Clone this repo.
 
@@ -72,7 +72,7 @@ docker-compose -f stage_dir/docker-compose.yaml logs -f minerva
 docker-compose -f stage_dir/docker-compose.yaml ps
 ```
 
-Access noctua from a browser using `http://localhost:{{ noctua_proxy_port }}`
+#### Access noctua from a browser using `http://localhost:{{ noctua_proxy_port }}`
 - Use `http://localhost:8080` if default `noctua_proxy_port` was used
 
 #### Bring down stack using docker compose.
