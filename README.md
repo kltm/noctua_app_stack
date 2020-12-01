@@ -58,7 +58,7 @@ docker image list | grep noctua
 ```sh
 ansible-playbook stage.yaml
 ```
-#### Bring up stack using docker compose.
+#### Bring up stack using docker-compose.
 
 ```sh
 # assuming stage_dir is in current directory
@@ -75,7 +75,7 @@ docker-compose -f stage_dir/docker-compose.yaml ps
 #### Access noctua from a browser using `http://localhost:{{ noctua_proxy_port }}`
 - Use `http://localhost:8080` if default `noctua_proxy_port` was used
 
-#### Bring down stack using docker compose.
+#### Bring down stack using docker-compose.
 
 ```sh
 # assuming stage_dir is in current directory
