@@ -1,4 +1,5 @@
-- hosts: localhost
+- name: build docker images
+  hosts: localhost
   vars_files:
   - vars.yaml
 
@@ -18,7 +19,7 @@
 
   - name: build minerva container image
     docker_image:
-      name: 'minerva:{{ tag }}'
+      name: '{{ docker_hub_user }}/minerva:{{ tag }}'
       source: build
       build:
         dockerfile: '{{ cwd }}/docker/Dockerfile.minerva'
@@ -28,10 +29,20 @@
 
   - name: build noctua container image
     docker_image:
-      name: 'noctua:{{ tag }}'
+      name: '{{ docker_hub_user }}/noctua:{{ tag }}'
       source: build
       build:
         dockerfile: '{{ cwd }}/docker/Dockerfile.noctua'
         path: '{{ cwd }}/noctua'
+        pull: no
+      state: present
+
+  - name: build golr container image
+    docker_image:
+      name: '{{ docker_hub_user }}/golr:{{ tag }}'
+      source: build
+      build:
+        dockerfile: '{{ cwd }}/docker/Dockerfile.golr'
+        path: '{{ cwd }}/amigo'
         pull: no
       state: present

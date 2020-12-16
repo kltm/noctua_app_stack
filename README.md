@@ -38,12 +38,17 @@ cd noctua_app_stack
   - barista_lookup_host
     - On mac if using wireless, you can use `ipconfig getifaddr en0`
 
-#### Build noctua and minerva docker images.
+#### Build images.
 
 ```sh
 ansible-playbook build_images.yaml
-docker image list | grep minerva
-docker image list | grep noctua 
+docker image list | egrep 'minerva|noctua|golr'
+```
+
+#### Push images.
+
+```sh
+ansible-playbook push_images.yaml
 ```
 
 #### Stage artifacts.
@@ -59,17 +64,24 @@ docker image list | grep noctua
 ansible-playbook stage.yaml
 ```
 #### Bring up stack using docker-compose.
+Two docker-compose files are staged:
+  - docker-compose-golr.yaml
+    - Uses a lightweight solr image for golr
+  - docker-compose-amigo.yaml
+    - Uses the official geneontology/amigo-standalone for golr
 
 ```sh
-# assuming stage_dir is in current directory
-docker-compose -f stage_dir/docker-compose.yaml up -d
+# assuming stage_dir is in current directory and docker-compose-golr.yaml is used:
+docker-compose -f stage_dir/docker-compose-golr.yaml up -d
 
 # minerva takes a long time to start up the first time
 # Tail minerva logs to see its progress
-docker-compose -f stage_dir/docker-compose.yaml logs -f minerva
+docker-compose -f stage_dir/docker-compose-golr.yaml logs -f minerva
+# Or tail all logs
+docker-compose -f stage_dir/docker-compose-golr.yaml logs -f
 
 # When minerva is ready all other services should be up
-docker-compose -f stage_dir/docker-compose.yaml ps
+docker-compose -f stage_dir/docker-compose-golr.yaml ps
 ```
 
 #### Access noctua from a browser using `http://localhost:{{ noctua_proxy_port }}`
@@ -78,6 +90,5 @@ docker-compose -f stage_dir/docker-compose.yaml ps
 #### Bring down stack using docker-compose.
 
 ```sh
-# assuming stage_dir is in current directory
-docker-compose -f stage_dir/docker-compose.yaml down
+docker-compose -f stage_dir/docker-compose-golr.yaml down
 ```

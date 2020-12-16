@@ -11,6 +11,7 @@
       - conf
       - barista
       - httpd-confs
+      - srv-solr-data
 
   - name: install configs from templates directory
     template:
@@ -19,8 +20,11 @@
     with_items:
       - { file: 'startup.yaml', dir: 'conf' }
       - { file: 'local.yaml', dir: 'barista' }
-      - { file: 'docker-compose.yaml', dir: '' }
+      - { file: 'docker-compose-amigo.yaml', dir: '' }
+      - { file: 'docker-compose-golr.yaml', dir: '' }
       - { file: 'httpd.conf', dir: 'httpd-confs' }
+      - { file: 'httpd-vhosts-amigo.conf', dir: 'httpd-confs' }
+      - { file: 'httpd-vhosts-golr.conf', dir: 'httpd-confs' }
       - { file: 'httpd-vhosts-barista.conf', dir: 'httpd-confs' }
       - { file: 'httpd-vhosts-noctua.conf', dir: 'httpd-confs' }
 
@@ -53,3 +57,21 @@
       volumes:
         - '{{ stage_dir }}:/stage_dir'
     when: not journal_result.stat.exists
+
+  - name: Check if index exists
+    stat:
+      path: '{{ stage_dir }}/srv-solr-data/index'
+    register: index_result
+  - name: Create Solr Index
+    docker_container:
+      name: create_index
+      image: geneontology/golr-autoindex-ontology
+      env:
+         GOLR_SOLR_MEMORY: 4G
+         GOLR_LOADER_MEMORY: 8G
+         GOLR_INPUT_ONTOLOGIES: http://purl.obolibrary.org/obo/ncbitaxon/subsets/taxslim.owl
+      auto_remove: true
+      detach: false
+      volumes:
+        - '{{ stage_dir }}/srv-solr-data:/srv/solr/data'
+    when: not index_result.stat.exists
