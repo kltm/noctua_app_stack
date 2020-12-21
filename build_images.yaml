@@ -6,12 +6,11 @@
   tasks:
   - name: Checkout repos
     git:
-     repo: 'https://github.com/geneontology/{{ item }}.git'
-     dest: ./{{ item }}
-     version: '{{ branch }}'
-     force: yes
-    with_items:
-      - '{{ repos }}'
+     repo: 'https://github.com/geneontology/{{ item.key }}.git'
+     dest: ./{{ item.key }}
+     version: '{{ item.value }}'
+     force: yes 
+    loop: '{{ repo_map|dict2items }}'
 
   - name: Setting cwd to current directory
     set_fact:

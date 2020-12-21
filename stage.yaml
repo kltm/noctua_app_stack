@@ -30,17 +30,16 @@
 
   - name: Check if repo is staged
     stat:
-      path: '{{ stage_dir }}/{{ item }}'
-    register: staged_repos 
-    with_items:
-      - '{{ staged_repos }}'
+      path: '{{ stage_dir }}/{{ item.key }}'
+    register: staged_repos_results
+    loop: '{{ staged_repos|dict2items }}'
+
   - name: Clone repos that are not staged
     git:
-     repo: 'https://github.com/geneontology/{{ item.item }}.git'
-     dest: '{{ stage_dir }}/{{ item.item }}'
-     version: '{{ branch }}'
-    with_items:
-      - '{{ staged_repos.results }}'
+     repo: 'https://github.com/geneontology/{{ item.item.key }}.git'
+     dest: '{{ stage_dir }}/{{ item.item.key }}'
+     version: '{{ item.item.value }}'
+    loop: '{{ staged_repos_results.results }}'
     when: not item.stat.exists
 
   - name: Check if journal exists 
