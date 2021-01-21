@@ -5,10 +5,17 @@ Install app stack using ansible on a single machine
 ## Requirements 
 
 - The steps below were successfully tested using:
-    - MacOs (10.15.3)
-    - Docker (19.03.5)
-    - Docker Compose (1.25.2)
-    - Ansible (2.10.3), Python (3.8.5), docker (4.3.1)
+    - Setup A:
+      - MacOs (10.15.3) and Ubuntu (18.0.4.5)
+      - Docker (19.03.5)
+      - Docker Compose (1.25.2)
+      - Ansible (2.10.3), Python (3.8.5), docker (4.3.1)
+    - Setup B:
+       - Ubuntu (18.0.4.5)
+       - Docker (20.10.2)
+       - Docker Compose (18.1)
+       - Ansible (2.5.1), Python (3.6.9)
+        
     
 - Notes:
     - Docker was given 3 CPUs and 8G RAM. (on mac see Docker Preferences | Resources)
@@ -37,6 +44,8 @@ cd noctua_app_stack
   - password
   - barista_lookup_host
     - On mac if using wireless, you can use `ipconfig getifaddr en0`
+
+You must also ensure that all variables marked as `REPLACE_ME` have been modified.
 
 #### Build noctua and minerva docker images.
 
